@@ -1,0 +1,7 @@
+{
+  "name": "smpd",
+  "version": "1.0.0",
+  "description": "simple minecraft packet decoder",
+  "main": "./src/index.js",
+  "author": "Sandro Pischinger"
+}
