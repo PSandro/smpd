@@ -35,6 +35,16 @@
   },
   "login": {
     "clientbound": {},
-    "serverbound": {}
+    "serverbound": {
+      "id0": {
+        "name": "Login Start",
+        "fields": [
+          {
+            "name": "Name",
+            "value": "string"
+          }
+        ]
+      }
+    }
   }
 }
