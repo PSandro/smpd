@@ -26,50 +26,7 @@
     }
   },
   "play": {
-    "clientbound": {
-      "id0": {
-        "name": "Handshakdsadsade",
-        "fields": [
-          {
-            "name": "Protocol",
-            "value": "varint"
-          },
-          {
-            "name": "Server Address",
-            "value": "string"
-          },
-          {
-            "name": "Server Port",
-            "value": "ushort"
-          },
-          {
-            "name": "Next State",
-            "value": "varint"
-          }
-        ]
-      },
-      "id1": {
-        "name": "huhuhu",
-        "fields": [
-          {
-            "name": "Protocol",
-            "value": "varint"
-          },
-          {
-            "name": "Server Address",
-            "value": "string"
-          },
-          {
-            "name": "Server Port",
-            "value": "ushort"
-          },
-          {
-            "name": "Next State",
-            "value": "varint"
-          }
-        ]
-      }
-    },
+    "clientbound": {},
     "serverbound": {}
   },
   "status": {
