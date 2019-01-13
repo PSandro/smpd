@@ -44,7 +44,7 @@ module.exports.find = function(length, packetId, packetReader, ask) {
     let decoder = new Decoder(length, packetId, packetReader, packetInfo);
 
     if (decoder.decode()) {
-      validDecoders[i] = decoder;
+      validDecoders.push(decoder);
     }
     packetReader.reset();
   }
