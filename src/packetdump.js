@@ -1,3 +1,7 @@
+const packetfinder = require('./packetfinder');
+
+const PacketInfo = packetfinder.PacketInfo;
+
 class PacketReader {
   constructor(hex) {
     this.buffer = Buffer.from(hex, 'hex');
@@ -50,13 +54,11 @@ class PacketReader {
   }
 
 }
-
-
 module.exports.dump = function(hex) {
   let pr = new PacketReader(hex);
 
   let length = pr.readVarint();
-  if (length < 2 ) {
+  if (length < 2) {
     console.log('Packet size is too low.\n');
     return;
   }
@@ -66,34 +68,6 @@ module.exports.dump = function(hex) {
   }
 
   let packetId = pr.readVarint();
-  let protocolVersion = pr.readVarint();
-
-  if (packetId === 0) {
-    var serverAddress = pr.readString();
-    var port = pr.readUnsignedShort();
-    var nextState = pr.readVarint();
-
-    if (!serverAddress || !port || !nextState) {
-      console.log("Could not read packet. Is it compromised?\n");
-      return;
-    }
-
-    console.log(
-      `Handshake Packet:
-      length: ${length}
-      packetId: ${packetId}
-      protocolVersion: ${protocolVersion}
-
-      serverAddress: ${serverAddress}
-      port: ${port}
-      nextState: ${nextState}
-      `);
-  } else {
-    console.log(
-      `Unknown Packet:
-      length: ${length}
-      packetId: ${packetId}
-      protocolVersion: ${protocolVersion}`);
-  }
+  packetfinder.find(length, packetId, pr);
 
 }

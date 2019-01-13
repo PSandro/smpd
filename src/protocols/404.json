@@ -1,0 +1,83 @@
+{
+  "handshaking": {
+    "clientbound": {},
+    "serverbound": {
+      "id0": {
+        "name": "Handshake",
+        "fields": [
+          {
+            "name": "Protocol Version",
+            "value": "varint"
+          },
+          {
+            "name": "Server Address",
+            "value": "string"
+          },
+          {
+            "name": "Server Port",
+            "value": "ushort"
+          },
+          {
+            "name": "Next State",
+            "value": "varint"
+          }
+        ]
+      }
+    }
+  },
+  "play": {
+    "clientbound": {
+      "id0": {
+        "name": "Handshakdsadsade",
+        "fields": [
+          {
+            "name": "Protocol",
+            "value": "varint"
+          },
+          {
+            "name": "Server Address",
+            "value": "string"
+          },
+          {
+            "name": "Server Port",
+            "value": "ushort"
+          },
+          {
+            "name": "Next State",
+            "value": "varint"
+          }
+        ]
+      },
+      "id1": {
+        "name": "huhuhu",
+        "fields": [
+          {
+            "name": "Protocol",
+            "value": "varint"
+          },
+          {
+            "name": "Server Address",
+            "value": "string"
+          },
+          {
+            "name": "Server Port",
+            "value": "ushort"
+          },
+          {
+            "name": "Next State",
+            "value": "varint"
+          }
+        ]
+      }
+    },
+    "serverbound": {}
+  },
+  "status": {
+    "clientbound": {},
+    "serverbound": {}
+  },
+  "login": {
+    "clientbound": {},
+    "serverbound": {}
+  }
+}
