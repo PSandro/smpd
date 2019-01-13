@@ -1,7 +1,20 @@
+const packetfinder = require('./packetfinder');
+
+const PacketInfo = packetfinder.PacketInfo;
+
 class PacketReader {
   constructor(hex) {
-    this.buffer = Buffer.from(hex, 'hex');
-    this.actualLength = Buffer.byteLength(hex, 'hex');
+    var buffer = Buffer.from(hex, 'hex');
+    this.buffer = buffer;
+    this._buffer = buffer;
+  }
+
+  reset() {
+    this.buffer = this._buffer;
+  }
+
+  setResetPoint() {
+    this._buffer = this.buffer;
   }
 
   readVarint() {
@@ -10,14 +23,12 @@ class PacketReader {
     var read = 0b00000000;
 
     do {
-      if (this.actualLength < 1) return;
       read = this.buffer[numRead];
 
       var value = (read & 0b01111111);
       var result = result | (value << (7 * numRead));
 
       numRead++;
-      this.actualLength--;
       if (numRead > 5) {
         throw "VarInt is too big";
       }
@@ -25,75 +36,47 @@ class PacketReader {
     } while ((read & 0b10000000) != 0);
 
     this.buffer = this.buffer.slice(numRead);
-    return result;
+    return {
+      value: result,
+      size: numRead
+    };
   }
 
   readUnsignedShort() {
-    if (this.actualLength < 2) return;
     var us = this.buffer.readUInt16BE();
     this.buffer = this.buffer.slice(2);
-    this.actualLength -= 2;
-    return us;
+    return {
+      value: us,
+      size: 2
+    };
   }
 
   readString() {
     var size = this.readVarint();
-    if (this.actualLength < size) return;
-    var string = this.buffer.toString('utf8', 0, size);
-    this.buffer = this.buffer.slice(size);
-    this.actualLength -= size;
-    return string;
+    var string = this.buffer.toString('utf8', 0, size.value);
+    this.buffer = this.buffer.slice(size.value);
+    return {
+      value: string,
+      size: size.value + size.size
+    };
   }
-
-  checkLength(length) {
-    return this.actualLength == length;
-  }
-
 }
-
-
-module.exports.dump = function(hex) {
+module.exports.dump = function(hex, ask) {
   let pr = new PacketReader(hex);
 
   let length = pr.readVarint();
-  if (length < 2 ) {
+  let actualLength = Buffer.byteLength(hex, 'hex');
+  if (length < 2) {
     console.log('Packet size is too low.\n');
     return;
   }
-  if (!pr.checkLength(length)) {
+  if (!(actualLength-length.size === length.value)) {
     console.log('Packet is lower/bigger than expected.\n');
     return;
   }
 
   let packetId = pr.readVarint();
-  let protocolVersion = pr.readVarint();
-
-  if (packetId === 0) {
-    var serverAddress = pr.readString();
-    var port = pr.readUnsignedShort();
-    var nextState = pr.readVarint();
-
-    if (!serverAddress || !port || !nextState) {
-      console.log("Could not read packet. Is it compromised?\n");
-      return;
-    }
-
-    console.log(
-      `Handshake Packet:
-      length: ${length}
-      packetId: ${packetId}
-      protocolVersion: ${protocolVersion}
-
-      serverAddress: ${serverAddress}
-      port: ${port}
-      nextState: ${nextState}
-      `);
-  } else {
-    console.log(
-      `Unknown Packet:
-      length: ${length}
-      packetId: ${packetId}
-      protocolVersion: ${protocolVersion}`);
-  }
+  pr.setResetPoint();
+  packetfinder.find(length, packetId, pr, ask);
 
 }

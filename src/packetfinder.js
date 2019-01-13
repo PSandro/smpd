@@ -1,0 +1,85 @@
+const data = require('./protocols/404.json');
+const Decoder = require('./decoder').Decoder;
+const index = require('../index');
+const jp = require('jsonpath');
+
+module.exports.packetTypes = {
+  HANDSHAKING: "handshaking",
+  PLAY: "play",
+  STATUS: "status",
+  LOGIN: "login"
+}
+module.exports.bound = {
+  CLIENTBOUND: "clientbound",
+  SERVERBOUND: "serverbound"
+}
+
+var PacketInfo = class PacketInfo {
+  constructor(type, bound, id, name, fields) {
+    this.type = type;
+    this.bound = bound;
+    this.id = id;
+    this.name = name;
+    this.fields = fields;
+  }
+}
+
+module.exports.find = function(length, packetId, packetReader, ask) {
+  let nodes = jp.nodes(data, `$..${"id"+packetId.value}`);
+  let validDecoders = [];
+
+  for (var i = 0; i < nodes.length; i++) {
+    let node = nodes[i];
+    let path = node.path;
+
+    let packet = node.value;
+    let name = packet.name;
+    let fields = packet.fields;
+
+    let type = path[1];
+    let bound = path[2];
+
+    let packetInfo = new PacketInfo(type, bound, packetId, name, fields);
+
+    let decoder = new Decoder(length, packetId, packetReader, packetInfo);
+
+    if (decoder.decode()) {
+      validDecoders[i] = decoder;
+    }
+    packetReader.reset();
+  }
+
+  if (validDecoders.length < 1) {
+    console.log(
+      `Unknown Packet:
+    length: ${length}
+    packetId: ${packetId}
+    `);
+  } else if (validDecoders.length === 1) {
+    validDecoders[0].display();
+  } else {
+    pickDecoder(validDecoders, ask);
+  }
+}
+
+function pickDecoder(decoders, ask) {
+  var pickmessage = ["Pick one of the following decoders:\n"];
+  for (var i = 0; i < decoders.length; i++) {
+    var decoder = decoders[i];
+    pickmessage[i + 1] = `  ${i+1}) ${decoder.packetInfo.name} (type=${decoder.packetInfo.type}, bound=${decoder.packetInfo.bound})`;
+  }
+  pickmessage.push("\n")
+  pickmessage = pickmessage.join("\n");
+  ask(pickmessage, function(answer) {
+    if (isNaN(answer)) {
+      console.log(`The input must be a number.`);
+      return;
+    }
+    if (answer < 0 || answer > decoders.length) {
+      console.log(`The input must be between 1 and ${decoders.length}`);
+      return;
+    }
+    decoders[answer-1].display();
+
+  });
+}
