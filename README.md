@@ -17,3 +17,7 @@ Getting hex packet data in wireshark...
 Inserting this data in smpd...
 
 ![grafik](https://user-images.githubusercontent.com/20563761/51077961-1f7e4400-16ae-11e9-9586-5118ce56274d.png)
+
+License
+---
+[MIT](/LICENSE)
