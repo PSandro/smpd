@@ -24,7 +24,11 @@ var PacketInfo = class PacketInfo {
   }
 }
 
-module.exports.find = function(length, packetId, packetReader, ask) {
+module.exports.findStructure = function (packetId) {
+
+}
+
+module.exports.find = function (length, packetId, packetReader, ask) {
   let nodes = jp.nodes(data, `$..${"id"+packetId.value}`);
   let validDecoders = [];
 
@@ -70,7 +74,7 @@ function pickDecoder(decoders, ask) {
   }
   pickmessage.push("\n")
   pickmessage = pickmessage.join("\n");
-  ask(pickmessage, function(answer) {
+  ask(pickmessage, function (answer) {
     if (isNaN(answer)) {
       console.log(`The input must be a number.`);
       return;
@@ -79,7 +83,7 @@ function pickDecoder(decoders, ask) {
       console.log(`The input must be between 1 and ${decoders.length}`);
       return;
     }
-    decoders[answer-1].display();
+    decoders[answer - 1].display();
 
   });
 }

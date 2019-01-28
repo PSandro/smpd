@@ -1,6 +1,6 @@
 const readline = require('readline');
 const rl = readline.createInterface(process.stdin, process.stdout);
-const dump = require('./src/packetdump');
+const dump = require('./src/packetreader');
 const hexRegex = /^[0-9a-fA-F]{3,}$/;
 
 

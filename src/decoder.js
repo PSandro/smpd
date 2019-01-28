@@ -55,7 +55,7 @@ module.exports.Decoder = class {
       Length (${this.length.size}B): ${this.length.value}B
       PacketID (${this.packetId.size}B): ${this.packetId.value}
       `);
-    this.values.forEach(function(entry) {
+    this.values.forEach(function (entry) {
       console.log(`      ${entry.name} (${entry.value.size}B): ${entry.value.value}`);
     })
 
