@@ -4,7 +4,11 @@
   "description": "simple minecraft packet decoder",
   "main": "./src/index.js",
   "author": "Sandro Pischinger",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "jsonpath": "^1.0.0"
   }
+  
 }

@@ -7,7 +7,7 @@ This little node app lets you see the values of a given packet data (hex). Curre
 git clone git@github.com:PSandro/smpd.git
 cd smpd
 npm install
-node index.js
+npm start
 ```
 ### What it looks like
 Getting hex packet data in wireshark...
