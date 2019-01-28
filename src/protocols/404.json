@@ -1,11 +1,13 @@
 {
   "handshaking": {
-    "clientbound": {},
+    "clientbound": {
+      "packet": []
+    },
     "serverbound": {
-      "id0": {
+      "packet": [{
+        "id": "0x00",
         "name": "Handshake",
-        "fields": [
-          {
+        "fields": [{
             "name": "Protocol Version",
             "value": "varint"
           },
@@ -22,29 +24,38 @@
             "value": "varint"
           }
         ]
-      }
+      }]
     }
   },
   "play": {
-    "clientbound": {},
-    "serverbound": {}
+    "clientbound": {
+      "packet": []
+    },
+    "serverbound": {
+      "packet": []
+    }
   },
   "status": {
-    "clientbound": {},
-    "serverbound": {}
+    "clientbound": {
+      "packet": []
+    },
+    "serverbound": {
+      "packet": []
+    }
   },
   "login": {
-    "clientbound": {},
+    "clientbound": {
+      "packet": []
+    },
     "serverbound": {
-      "id0": {
+      "packet": [{
+        "id": "0x00",
         "name": "Login Start",
-        "fields": [
-          {
-            "name": "Name",
-            "value": "string"
-          }
-        ]
-      }
+        "fields": [{
+          "name": "Name",
+          "value": "string"
+        }]
+      }]
     }
   }
 }
