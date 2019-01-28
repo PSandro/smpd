@@ -1,6 +1,7 @@
 const data = require('./protocols/404.json');
 const Decoder = require('./decoder').Decoder;
 const index = require('../index');
+const PacketReader = require('./packetreader').PacketReader;
 const jp = require('jsonpath');
 
 module.exports.packetTypes = {
@@ -25,10 +26,30 @@ var PacketInfo = class PacketInfo {
 }
 
 module.exports.findStructure = function (packetId) {
+  return jp.nodes(data, `$..${"id"+packetId.value}`);
+}
+
+module.exports.dump = function(hex, ask) {
+  let pr = new PacketReader(hex);
+
+  let length = pr.readVarint();
+  let actualLength = Buffer.byteLength(hex, 'hex');
+  if (length < 2) {
+    console.log('Packet size is too low.\n');
+    return;
+  }
+  if (!(actualLength-length.size === length.value)) {
+    console.log('Packet is lower/bigger than expected.\n');
+    return;
+  }
+
+  let packetId = pr.readVarint();
+  pr.setResetPoint();
+  this.find(length, packetId, pr, ask);
 
 }
 
-module.exports.find = function (length, packetId, packetReader, ask) {
+module.exports.find = function(length, packetId, packetReader, ask) {
   let nodes = jp.nodes(data, `$..${"id"+packetId.value}`);
   let validDecoders = [];
 
@@ -74,7 +95,7 @@ function pickDecoder(decoders, ask) {
   }
   pickmessage.push("\n")
   pickmessage = pickmessage.join("\n");
-  ask(pickmessage, function (answer) {
+  ask(pickmessage, function(answer) {
     if (isNaN(answer)) {
       console.log(`The input must be a number.`);
       return;
@@ -83,7 +104,7 @@ function pickDecoder(decoders, ask) {
       console.log(`The input must be between 1 and ${decoders.length}`);
       return;
     }
-    decoders[answer - 1].display();
+    decoders[answer-1].display();
 
   });
 }
