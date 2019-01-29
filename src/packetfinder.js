@@ -38,31 +38,32 @@ let PacketInfo = class PacketInfo {
   }
 }
 
-function getPacketInfo(node, packetId) {
+function getPacketInfo(node) {
     let path = node.path;
     
     let packet = node.value;
+    
+    let type = packet.type;
+    let bound = packet.bound;
+    let packetId = packet.id;
     let name = packet.name;
     let fields = packet.fields;
-
-    let type = path[1];
-    let bound = path[2];
 
     return new PacketInfo(type, bound, packetId, name, fields);
 }
 
-module.exports.findStructure = function (packetId) {
-  let nodes = jp.nodes(data, `$..packet[?(@.id=='${this.toHexString(packetId)}')]`);
+function findNodes(packetId) {
+  let nodes = jp.nodes(data, `$.packet[?(@.id=='${toHexString(packetId)}')]`);
   return nodes;
 }
 
 module.exports.printStructure = function(packetId) {
-  let nodes = this.findStructure(packetId);
+  let nodes = findNodes(packetId);
   
   let packetInfos = [];
 
   for (var i = 0; i < nodes.length; i++) {
-    packetInfos[i] = getPacketInfo(nodes[i], packetId);
+    packetInfos[i] = getPacketInfo(nodes[i]);
   }
 
   if (packetInfos.length < 1) {
@@ -97,13 +98,13 @@ module.exports.dump = function(hex) {
 }
 
 module.exports.find = function(length, packetId, packetReader) {
-  let nodes = jp.nodes(data, `$..['${this.toHexString(packetId.value)}']`);
+  let nodes = findNodes(packetId.value);
   let validDecoders = [];
 
   for (var i = 0; i < nodes.length; i++) {
     let node = nodes[i];
 
-    let packetInfo = getPacketInfo(node, packetId.value);
+    let packetInfo = getPacketInfo(node);
 
     let decoder = new Decoder(length, packetId, packetReader, packetInfo);
 
@@ -173,7 +174,7 @@ function pickStructure(structures) {
   });
 }
 
-module.exports.toHexString = function (number) {
+function toHexString(number) {
   if (isNaN(number)) throw "Input is not a number";
   hexString = number.toString(16);
   if (hexString.length % 2) {

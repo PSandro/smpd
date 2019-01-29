@@ -1,61 +1,36 @@
 {
-  "handshaking": {
-    "clientbound": {
-      "packet": []
-    },
-    "serverbound": {
-      "packet": [{
-        "id": "0x00",
-        "name": "Handshake",
-        "fields": [{
-            "name": "Protocol Version",
-            "value": "varint"
-          },
-          {
-            "name": "Server Address",
-            "value": "string"
-          },
-          {
-            "name": "Server Port",
-            "value": "ushort"
-          },
-          {
-            "name": "Next State",
-            "value": "varint"
-          }
-        ]
-      }]
-    }
-  },
-  "play": {
-    "clientbound": {
-      "packet": []
-    },
-    "serverbound": {
-      "packet": []
-    }
-  },
-  "status": {
-    "clientbound": {
-      "packet": []
-    },
-    "serverbound": {
-      "packet": []
-    }
-  },
-  "login": {
-    "clientbound": {
-      "packet": []
-    },
-    "serverbound": {
-      "packet": [{
-        "id": "0x00",
-        "name": "Login Start",
-        "fields": [{
-          "name": "Name",
+  "packet": [{
+      "type": "handshaking",
+      "bound": "serverbound",
+      "id": "0x00",
+      "name": "Handshake",
+      "fields": [{
+          "name": "Protocol Version",
+          "value": "varint"
+        },
+        {
+          "name": "Server Address",
           "value": "string"
-        }]
+        },
+        {
+          "name": "Server Port",
+          "value": "ushort"
+        },
+        {
+          "name": "Next State",
+          "value": "varint"
+        }
+      ]
+    },
+    {
+      "type": "login",
+      "bound": "serverbound",
+      "id": "0x00",
+      "name": "Login Start",
+      "fields": [{
+        "name": "Name",
+        "value": "string"
       }]
     }
-  }
+  ]
 }
